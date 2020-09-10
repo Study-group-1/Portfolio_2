@@ -75,6 +75,7 @@ Load necessary libraries : what will you need?
 - e.g. something to plot with
 
 ```{r Load Libraries, include = FALSE}
+pacman::p_load(ggplot2, tidyverse, MuMIn, lme4, purrr, lmerTest)
 
 ```
 
@@ -88,6 +89,8 @@ If you opened this Rmd file outside of a project, you will need some code to fin
 - Load the data you saved last time (use read_csv(fileName))
 
 ```{r Load Data, include = FALSE}
+df <- read_csv('autisme')
+df$X1 <- NULL
 
 ```
 
@@ -99,7 +102,15 @@ Make sure the variables are in the right format.
 
 Describe the characteristics of the two groups of participants and whether the two groups are well matched.
 
-```{r descriptive stats, include = FALSE}
+```{r descriptive stats, include = TRUE}
+df <- df %>% mutate(Diagnosis = as.factor(Diagnosis), 
+              Gender = as.factor(Gender),
+              Ethnicity = as.factor(Ethnicity),
+              SUBJ = as.factor(SUBJ))
+
+df %>% split(df$Diagnosis) %>% map(summary)
+
+
 
 ```
 
@@ -118,12 +129,24 @@ Remember to plot the data first and then to run a statistical test.
 - Which variable(s) should be included as random factors?
 
 ```{r ex2, include = FALSE}
+ggplot(df) + aes(x=Age, y=CHI_MLU, color = Diagnosis) +
+            geom_point() + geom_smooth(method = 'lm', se = F) +
+              theme_light()
+
+m1 <- lmerTest::lmer(CHI_MLU ~ Age + Diagnosis + ( 1  |SUBJ), df, REML = F)
+
+summary(m1)
+
+
 
 ```
 
 How would you evaluate whether the model is a good model?
 
 ```{r ex2 evaluate, include = FALSE}
+
+
+MuMIn::r.squaredGLMM(m1)
 
 ```
 
@@ -155,6 +178,9 @@ Linguistic development of children MLU is affected by ... [COMPLETE]
 ### Hypothesis: Parental MLU changes: i) over time, ii) according to diagnosis
 
 ```{r ex3, include = FALSE}
+m2 <- lmerTest::lmer(MOT_MLU ~ Age + Diagnosis + ( 1  |SUBJ), df, REML = F)
+
+summary(m2)
 
 ```
 
