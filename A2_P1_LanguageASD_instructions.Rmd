@@ -76,6 +76,8 @@ Load necessary libraries : what will you need?
 
 ```{r Load Libraries, include = FALSE}
 
+pacman::p_load('tidyverse', 'ggplot2', 'lme4', 'lmerTest', 'MuMIn', 'pastecs')
+
 ```
 
 ### Define your working directory and load the data
@@ -89,6 +91,9 @@ If you opened this Rmd file outside of a project, you will need some code to fin
 
 ```{r Load Data, include = FALSE}
 
+df <- read_csv("autisme")
+df$X1 <- NULL 
+
 ```
 
 ### Characterize the participants (Exercise 1)
@@ -100,6 +105,17 @@ Make sure the variables are in the right format.
 Describe the characteristics of the two groups of participants and whether the two groups are well matched.
 
 ```{r descriptive stats, include = FALSE}
+
+pacman::p_load(purrr)
+
+df %>% 
+  mutate(
+    SUBJ = as.factor(SUBJ),
+    Gender = as.factor(Gender),
+    Ethnicity = as.factor(Ethnicity),
+    Diagnosis = as.factor(Diagnosis)
+  ) %>%
+  split(df$Diagnosis) %>% map(summary)
 
 ```
 
@@ -118,6 +134,12 @@ Remember to plot the data first and then to run a statistical test.
 - Which variable(s) should be included as random factors?
 
 ```{r ex2, include = FALSE}
+
+df %>%
+  ggplot(aes(x = Age, y = CHI_MLU, color = Diagnosis)) + 
+  geom_point() + geom_smooth(method = lm)
+
+
 
 ```
 
