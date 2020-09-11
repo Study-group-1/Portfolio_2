@@ -128,16 +128,6 @@ The sample included mostly young (<20) white males ...
 - ASD matched with TD at first visit -- we're interested in the development of the children. 
 - A very large skew in Gender towards males 
 
-
-[REPORT THE RESULTS]
-
-```{r}
-#Making a ggplot
-
-```
-
-
-
 ## Let's test hypothesis 1: Children with ASD display a language impairment  (Exercise 2)
 
 ### Hypothesis: The child's MLU changes: i) over time, ii) according to diagnosis
@@ -149,6 +139,8 @@ Remember to plot the data first and then to run a statistical test.
 - Which variable(s) should be included as random factors? Subject ID
 
 ```{r ex2, include = FALSE}
+
+#plotting the data
 
 ggplot(df) + 
   aes(x=Age, y=CHI_MLU, color = Diagnosis) +
@@ -168,34 +160,38 @@ df %>%
   theme_linedraw() + 
   facet_wrap(~ VISIT)
 
+```
+
+
+```{r}
+#creating models
 
 null <- lmerTest::lmer(CHI_MLU ~ 1 + (1|SUBJ), df, REML = F)
 m1 <- lmerTest::lmer(CHI_MLU ~ VISIT + (1|SUBJ), df, REML = F)
 m2 <- lmerTest::lmer(CHI_MLU ~ Diagnosis + (1|SUBJ), df, REML = F)
 m3 <- lmerTest::lmer(CHI_MLU ~ VISIT + Diagnosis + (1|SUBJ), df, REML = F)
 m4 <- lmerTest::lmer(CHI_MLU ~ VISIT + Diagnosis + (1 + VISIT|SUBJ), df, REML = F)
-
 ```
+
 
 How would you evaluate whether the model is a good model?
 
 ```{r ex2 evaluate, include = FALSE}
+
+#anova
 
 anova(null, m3)
 anova(m1,m3)
 anova(m2,m3)
 anova(m3,m4)
 
+#mumin
+
 MuMIn::r.squaredGLMM(null)
 MuMIn::r.squaredGLMM(m1)
 MuMIn::r.squaredGLMM(m2)
 MuMIn::r.squaredGLMM(m3)
 MuMIn::r.squaredGLMM(m4)
-
-plot(m3)
-
-sum_m3 <- summary(m3)
-residuals <- sum_m3$residuals
 
 ```
 
@@ -210,17 +206,18 @@ summary(m3_sq)
 MuMIn::r.squaredGLMM(m3)
 MuMIn::r.squaredGLMM(m3_sq)
 anova(m3, m3_sq)
-
-
-
-
 ```
 
 Exciting right? Let's check whether the model is doing an alright job at fitting the data. Plot the actual CHI_MLU data against the predictions of the model fitted(model). 
 
 ```{r}
 
-exciting <- data.frame("actual" = df$CHI_MLU, "predicted" = sum_m3$residuals)
+sum_m3 <- summary(m3)
+residuals <- sum_m3$residuals
+
+exciting <- data.frame("actual" = df$CHI_MLU, "residuals" = sum_m3$residuals, "predicted" =df$CHI_MLU + sum_m3$residuals)
+
+ggplot(exciting) + aes(x = actual, y = predicted) + geom_point() + geom_smooth(method = "lm")
 
 ```
 
