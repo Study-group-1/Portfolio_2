@@ -75,7 +75,12 @@ Load necessary libraries : what will you need?
 - e.g. something to plot with
 
 ```{r Load Libraries, include = FALSE}
+<<<<<<< HEAD
 pacman::p_load('tidyverse', 'ggplot2', 'lme4', 'lmerTest', 'MuMIn', 'pastecs', 'purr')
+=======
+pacman::p_load(ggplot2, tidyverse, MuMIn, lme4, purrr, lmerTest)
+
+>>>>>>> f6a46a2416e96bc4307bd29af770a1d91b2b38de
 ```
 
 ### Define your working directory and load the data
@@ -88,9 +93,15 @@ If you opened this Rmd file outside of a project, you will need some code to fin
 - Load the data you saved last time (use read_csv(fileName))
 
 ```{r Load Data, include = FALSE}
+<<<<<<< HEAD
 df <- read_csv("autisme")
 #Removing column X1 from Autism dataset
 df$X1 <- NULL
+=======
+df <- read_csv('autisme')
+df$X1 <- NULL
+
+>>>>>>> f6a46a2416e96bc4307bd29af770a1d91b2b38de
 ```
 
 ### Characterize the participants (Exercise 1)
@@ -102,6 +113,7 @@ Make sure the variables are in the right format.
 Describe the characteristics of the two groups of participants and whether the two groups are well matched.
 
 ```{r descriptive stats, include = TRUE}
+<<<<<<< HEAD
 #see dataframe and the variables 
 str(df)
 
@@ -115,6 +127,16 @@ df %>%
   ) %>% 
   split(df$Diagnosis) %>%
   map(summary)
+=======
+df <- df %>% mutate(Diagnosis = as.factor(Diagnosis), 
+              Gender = as.factor(Gender),
+              Ethnicity = as.factor(Ethnicity),
+              SUBJ = as.factor(SUBJ))
+
+df %>% split(df$Diagnosis) %>% map(summary)
+
+
+>>>>>>> f6a46a2416e96bc4307bd29af770a1d91b2b38de
 
 ```
 
@@ -151,12 +173,24 @@ Remember to plot the data first and then to run a statistical test.
 - Which variable(s) should be included as random factors?
 
 ```{r ex2, include = FALSE}
+ggplot(df) + aes(x=Age, y=CHI_MLU, color = Diagnosis) +
+            geom_point() + geom_smooth(method = 'lm', se = F) +
+              theme_light()
+
+m1 <- lmerTest::lmer(CHI_MLU ~ Age + Diagnosis + ( 1  |SUBJ), df, REML = F)
+
+summary(m1)
+
+
 
 ```
 
 How would you evaluate whether the model is a good model?
 
 ```{r ex2 evaluate, include = FALSE}
+
+
+MuMIn::r.squaredGLMM(m1)
 
 ```
 
@@ -188,6 +222,9 @@ Linguistic development of children MLU is affected by ... [COMPLETE]
 ### Hypothesis: Parental MLU changes: i) over time, ii) according to diagnosis
 
 ```{r ex3, include = FALSE}
+m2 <- lmerTest::lmer(MOT_MLU ~ Age + Diagnosis + ( 1  |SUBJ), df, REML = F)
+
+summary(m2)
 
 ```
 
