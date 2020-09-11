@@ -90,8 +90,13 @@ If you opened this Rmd file outside of a project, you will need some code to fin
 
 ```{r Load Data, include = FALSE}
 
+#load data
 df <- read_csv('autisme.csv')
+
+#remove meaningless column
 df$X1 <- NULL
+
+#remove rows where CHI_MLU = N/A
 df <- df %>% filter(!is.na(CHI_MLU))
 
 ```
@@ -105,6 +110,7 @@ Make sure the variables are in the right format.
 Describe the characteristics of the two groups of participants and whether the two groups are well matched.
 
 ```{r descriptive stats, include = TRUE}
+
 #see dataframe and the variables 
 str(df)
 
