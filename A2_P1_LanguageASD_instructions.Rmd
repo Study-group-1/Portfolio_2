@@ -1,7 +1,7 @@
 ---
 title: "Assignment 2 - Language Development in ASD - Part 1 - Explaining development"
-author: "[YOUR NAME]"
-date: "[DATE]"
+author: "Magnus, Tobias, Gustav, Morten, Nicoline"
+date: "10.09.20"
 output: html_document
 ---
     
@@ -75,7 +75,7 @@ Load necessary libraries : what will you need?
 - e.g. something to plot with
 
 ```{r Load Libraries, include = FALSE}
-
+pacman::p_load('tidyverse', 'ggplot2', 'lme4', 'lmerTest', 'MuMIn', 'pastecs', 'purr')
 ```
 
 ### Define your working directory and load the data
@@ -88,7 +88,9 @@ If you opened this Rmd file outside of a project, you will need some code to fin
 - Load the data you saved last time (use read_csv(fileName))
 
 ```{r Load Data, include = FALSE}
-
+df <- read_csv("autisme")
+#Removing column X1 from Autism dataset
+df$X1 <- NULL
 ```
 
 ### Characterize the participants (Exercise 1)
@@ -99,13 +101,44 @@ Make sure the variables are in the right format.
 
 Describe the characteristics of the two groups of participants and whether the two groups are well matched.
 
-```{r descriptive stats, include = FALSE}
+```{r descriptive stats, include = TRUE}
+#see dataframe and the variables 
+str(df)
+
+#changing the variables and getting an overview of the characteristics 
+df %>% 
+  mutate(
+    Gender = as.factor(Gender),
+    SUBJ = as.factor(SUBJ),
+    Ethnicity = as.factor(df$Ethnicity),
+    Diagnosis = as.factor(Diagnosis)
+  ) %>% 
+  split(df$Diagnosis) %>%
+  map(summary)
 
 ```
 
 The sample included mostly young (<20) white males ...
 
+- Approximately the same amount of children 
+- Not equally 
+- ASD matched with TD at first visit -- we're interested in the development of the children. 
+- A very large skew in Gender towards males 
+
+
 [REPORT THE RESULTS]
+
+```{r}
+#Making a ggplot
+df %>% 
+  ggplot() +
+  aes(x = Age, y = CHI_MLU, color = Diagnosis) +
+  geom_point() + 
+  geom_smooth(method = "lm") + 
+  theme_minimal()
+```
+
+
 
 ## Let's test hypothesis 1: Children with ASD display a language impairment  (Exercise 2)
 
