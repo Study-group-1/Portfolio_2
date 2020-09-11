@@ -160,11 +160,8 @@ df %>%
   theme_linedraw() + 
   facet_wrap(~ VISIT)
 
-m1 <- lmerTest::lmer(CHI_MLU ~ Age + Diagnosis + ( 1  |SUBJ), df, REML = F)
-
+m1 <- lmerTest::lmer(CHI_MLU ~ Age + Diagnosis + (1|SUBJ), df, REML = F)
 summary(m1)
-
-
 
 ```
 
@@ -172,8 +169,9 @@ How would you evaluate whether the model is a good model?
 
 ```{r ex2 evaluate, include = FALSE}
 
-
 MuMIn::r.squaredGLMM(m1)
+
+
 
 ```
 
