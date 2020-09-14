@@ -214,12 +214,14 @@ anova(m4, m4_sq)
 Exciting right? Let's check whether the model is doing an alright job at fitting the data. Plot the actual CHI_MLU data against the predictions of the model fitted(model). 
 
 ```{r}
-
+#getting the residuals
 sum_m3 <- summary(m3)
 residuals <- sum_m3$residuals
 
+#making a df with actual values and predicted values
 exciting <- data.frame("actual" = df$CHI_MLU, "residuals" = sum_m3$residuals, "predicted" =df$CHI_MLU + sum_m3$residuals)
 
+#plotting actual vs predicted
 ggplot(exciting) + aes(x = actual, y = predicted) + geom_point() + geom_smooth(method = "lm")
 
 ```
