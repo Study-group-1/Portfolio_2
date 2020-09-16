@@ -177,6 +177,7 @@ m1 <- lmerTest::lmer(CHI_MLU ~ VISIT + (1|SUBJ), df, REML = F)
 m2 <- lmerTest::lmer(CHI_MLU ~ Diagnosis + (1|SUBJ), df, REML = F)
 m3 <- lmerTest::lmer(CHI_MLU ~ VISIT + Diagnosis + (1|SUBJ), df, REML = F)
 m4 <- lmerTest::lmer(CHI_MLU ~ VISIT + Diagnosis + (1 + VISIT|SUBJ), df, REML = F)
+
 ```
 
 
@@ -188,7 +189,7 @@ How would you evaluate whether the model is a good model?
 anova(null, m1, m2, m3, m4)
 
 #mumin
-MuMIn::r.squaredGLMM(null, m1, m2)
+MuMIn::r.squaredGLMM(null)
 MuMIn::r.squaredGLMM(m1)
 MuMIn::r.squaredGLMM(m2)
 MuMIn::r.squaredGLMM(m3)
