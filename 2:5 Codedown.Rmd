@@ -1,6 +1,6 @@
 ---
-title: "Final codedown"
-author: "Magnus"
+title: "2/5 codedown"
+author: "Gustav, Magnus, Morten, Nicoline, Tobias"
 date: "9/16/2020"
 output: html_document
 ---
